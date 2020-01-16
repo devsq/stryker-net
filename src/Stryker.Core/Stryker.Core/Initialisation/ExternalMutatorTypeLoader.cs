@@ -41,7 +41,7 @@ namespace Stryker.Core.Initialisation
                 .LoadDefaultAssembly()
                 .GetTypes()
                 .Where(t => typeof(IMutator).IsAssignableFrom(t))
-                .Where(t => t.IsAbstract))
+                .Where(t => !t.IsAbstract))
                 .Select(t => (IMutator)Activator.CreateInstance(t));
 
             return mutators;
