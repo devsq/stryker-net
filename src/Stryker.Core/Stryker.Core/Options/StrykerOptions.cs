@@ -47,6 +47,7 @@ namespace Stryker.Core.Options
         public string ProjectName { get; }
         public string ModuleName { get; }
         public string ProjectVersion { get; }
+        public string ExternalMutatorsPath { get; set; }
 
         private const string ErrorMessage = "The value for one of your settings is not correct. Try correcting or removing them.";
         private readonly IFileSystem _fileSystem;
@@ -79,7 +80,8 @@ namespace Stryker.Core.Options
             string dashboadApiKey = null,
             string projectName = null,
             string moduleName = null,
-            string projectVersion = null)
+            string projectVersion = null,
+            string externalMutatorsPath = null)
         {
             _fileSystem = fileSystem ?? new FileSystem();
 
@@ -105,6 +107,7 @@ namespace Stryker.Core.Options
             DiffEnabled = diff;
             GitSource = ValidateGitSource(gitSource);
             (DashboardApiKey, ProjectName, ModuleName, ProjectVersion) = ValidateDashboardReporter(dashboadApiKey, projectName, moduleName, projectVersion);
+            ExternalMutatorsPath = externalMutatorsPath;
         }
 
         private (string DashboardApiKey, string ProjectName, string ModuleName, string ProjectVersion) ValidateDashboardReporter(string dashboadApiKey, string projectName, string moduleName, string projectVersion)

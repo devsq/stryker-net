@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Stryker.Core.Mutators;
 
 namespace Stryker.CLI
 {
@@ -277,6 +278,15 @@ For example: Your project might be called 'consumer-loans' and it might contains
             ArgumentDescription = $"Project version used in reporters. Can be semver, git commit hash, branch name or anything else to indicate what version of your software you're testing.",
             DefaultValue = null,
             JsonKey = "dashboard-version"
+        };
+
+        public static readonly CLIOption<string> ExternalMutatorsPath = new CLIOption<string>
+        {
+            ArgumentName = "--external-mutators-path",
+            ArgumentShortName = "-emut <path>",
+            ArgumentDescription = $@"Path to folder containing assembly .dlls with {nameof(IMutator)} implementations",
+            DefaultValue = null,
+            JsonKey = "external-mutators-path"
         };
 
         private static string FormatOptionsString<T, Y>(T @default, IEnumerable<Y> options)

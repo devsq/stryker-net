@@ -5,8 +5,10 @@ using Stryker.Core.Logging;
 using Stryker.Core.Mutators;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO.Abstractions;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
+using Stryker.Core.Initialisation;
 using Stryker.Core.Options;
 
 namespace Stryker.Core.Mutants
@@ -28,6 +30,7 @@ namespace Stryker.Core.Mutants
     public class MutantOrchestrator : IMutantOrchestrator
     {
         private readonly StrykerOptions _options;
+        private readonly IExternalMutatorTypeLoader _externalMutatorTypeLoader;
         private ICollection<Mutant> Mutants { get; set; }
         private int MutantCount { get; set; }
         private IEnumerable<IMutator> Mutators { get; }
@@ -38,24 +41,15 @@ namespace Stryker.Core.Mutants
             !_options.Optimizations.HasFlag(OptimizationFlags.CaptureCoveragePerTest);
 
         /// <param name="mutators">The mutators that should be active during the mutation process</param>
-        public MutantOrchestrator(IEnumerable<IMutator> mutators = null, StrykerOptions options = null)
+        public MutantOrchestrator(
+            IEnumerable<IMutator> mutators = null,
+            IExternalMutatorTypeLoader externalMutatorTypeLoader = null,
+            StrykerOptions options = null)
         {
+            _externalMutatorTypeLoader = externalMutatorTypeLoader ?? new ExternalMutatorTypeLoader(new FileSystem());
             _options = options;
-            Mutators = mutators ?? new List<IMutator>()
-                {
-                    // the default list of mutators
-                    new BinaryExpressionMutator(),
-                    new BooleanMutator(),
-                    new AssignmentExpressionMutator(),
-                    new PrefixUnaryMutator(),
-                    new PostfixUnaryMutator(),
-                    new CheckedMutator(),
-                    new LinqMutator(),
-                    new StringMutator(),
-                    new StringEmptyMutator(),
-                    new InterpolatedStringMutator(),
-                    new NegateConditionMutator(),
-                };
+
+            Mutators = GetMutators(mutators, options);
             Mutants = new Collection<Mutant>();
             Logger = ApplicationLogging.LoggerFactory.CreateLogger<MutantOrchestrator>();
         }
@@ -320,6 +314,35 @@ namespace Stryker.Core.Mutants
         {
             Mutants.Add(mutant);
             return node.ReplaceNode(mutant.Mutation.OriginalNode, mutant.Mutation.ReplacementNode);
+        }
+
+        private IEnumerable<IMutator> GetMutators(IEnumerable<IMutator> mutators, StrykerOptions options)
+        {
+            var result = mutators?.ToList() ?? new List<IMutator>
+            {
+                // the default list of mutators
+                new BinaryExpressionMutator(),
+                new BooleanMutator(),
+                new AssignmentExpressionMutator(),
+                new PrefixUnaryMutator(),
+                new PostfixUnaryMutator(),
+                new CheckedMutator(),
+                new LinqMutator(),
+                new StringMutator(),
+                new StringEmptyMutator(),
+                new InterpolatedStringMutator(),
+                new NegateConditionMutator(),
+            };
+
+            if (string.IsNullOrEmpty(options.ExternalMutatorsPath))
+            {
+                return result;
+            }
+
+            var externalMutators = _externalMutatorTypeLoader.LoadExternalMutators(options.ExternalMutatorsPath);
+            result.AddRange(externalMutators);
+
+            return result;
         }
     }
 }
