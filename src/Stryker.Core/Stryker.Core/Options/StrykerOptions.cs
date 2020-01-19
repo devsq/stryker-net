@@ -12,6 +12,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Stryker.Abstractions;
 
 namespace Stryker.Core.Options
 {

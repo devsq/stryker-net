@@ -16,6 +16,7 @@ using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Reflection;
+using Stryker.Abstractions;
 using Stryker.Core.MutantFilters;
 using Xunit;
 

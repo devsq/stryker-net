@@ -2,13 +2,12 @@ using Moq;
 using Serilog.Events;
 using Shouldly;
 using Stryker.Core;
-using Stryker.Core.Mutators;
 using Stryker.Core.Options;
 using Stryker.Core.Reporters;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Stryker.Abstractions;
 using Stryker.Core.Logging;
 using Xunit;
 

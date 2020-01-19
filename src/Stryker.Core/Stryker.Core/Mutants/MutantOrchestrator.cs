@@ -2,13 +2,14 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Stryker.Core.Logging;
-using Stryker.Core.Mutators;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.Abstractions;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
+using Stryker.Abstractions;
 using Stryker.Core.Initialisation;
+using Stryker.Core.Mutators;
 using Stryker.Core.Options;
 
 namespace Stryker.Core.Mutants

@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
-using Stryker.Core.Mutants;
 using System.Collections.Generic;
 using System.Linq;
+using Stryker.Abstractions;
 
 namespace Stryker.Core.Mutators
 {

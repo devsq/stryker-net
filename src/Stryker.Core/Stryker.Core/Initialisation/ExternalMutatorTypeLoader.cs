@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using McMaster.NETCore.Plugins;
-using Stryker.Core.Mutators;
+using Stryker.Abstractions;
 
 namespace Stryker.Core.Initialisation
 {
@@ -30,12 +30,12 @@ namespace Stryker.Core.Initialisation
             }
 
             var dlls = _fileSystem.Directory
-                .EnumerateFiles(path, "*.dll", SearchOption.TopDirectoryOnly);
+                .EnumerateFiles(path, "*Stryker.Mutators.dll", SearchOption.TopDirectoryOnly);
 
             var loaders = dlls.Select(dll => PluginLoader
                 .CreateFromAssemblyFile(
-                    assemblyFile: dll, 
-                    sharedTypes: new[] { typeof(IMutator) }));
+                    assemblyFile: dll,
+                    config => config.PreferSharedTypes = true));
 
             var mutators = loaders.SelectMany(loader => loader
                 .LoadDefaultAssembly()

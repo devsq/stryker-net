@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Moq;
 using Stryker.Core.Mutants;
-using Stryker.Core.Mutators;
 using Stryker.Core.Options;
 using Stryker.Core.ProjectComponents;
 using Stryker.Core.Reporters;
@@ -10,6 +9,7 @@ using Stryker.Core.Testing;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using Stryker.Abstractions;
 using Xunit;
 
 namespace Stryker.Core.UnitTest.Reporters
